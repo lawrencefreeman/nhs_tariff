@@ -1,0 +1,39 @@
+name: Deploy Snowflake setup
+
+on:
+  push:
+    branches:
+      - dev
+      - test
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install SnowSQL CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip install snowflake-cli-labs
+          snow --version
+
+      - name: Run Snowflake setup scripts
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+          S3_ALLOWED_LOCATION: ${{ secrets.S3_ALLOWED_LOCATION }}
+        run: |
+          for file in snowflake/setup/*.sql; do
+            echo "Running $file..."
+            snow sql -q "$(envsubst < $file)"
+          done
