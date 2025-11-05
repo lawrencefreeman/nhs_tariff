@@ -42,14 +42,27 @@ jobs:
         run: |
           echo "Creating Snowflake CLI connection..."
           snow connection add 
-            --connection-name default \
-            --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \
-            --authenticator jwt \
+            --connection-name default \ --good
+            --account "$SNOWFLAKE_ACCOUNT" \ --good
+            --user "$SNOWFLAKE_USER" \ 
+            --authenticator SNOWFLAKE_JWT \
             --private-key-file private_key.p8 \
             --role "$SNOWFLAKE_ROLE" \
             --warehouse "$SNOWFLAKE_WAREHOUSE" \
             --database "$SNOWFLAKE_DATABASE"
+
+
+user = "DBT_SVC"
+password = "@ehgWhALkoP3k2kKF8Z*"
+host = "GHYUWTI-FO56503.snowflakecomputing.com"
+region = "eu-west-2"
+port = 443
+database = "NHS_TARIFF_DEV"
+schema = "BRONZE"
+warehouse = "COMPUTE_WH"
+role = "DEVELOPER"
+authenticator = "jwt"
+private_key_file = "/Users/loz/Projects/data_eng_projects/nhs_payment_scheme/schema_private/rsa_key.p8"
           
           echo "Testing connection..."
           snow connection test default
