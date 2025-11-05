@@ -41,7 +41,8 @@ jobs:
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
         run: |
           echo "Creating Snowflake CLI connection..."
-          snow connection add default \
+          snow connection add 
+            --connection-name default \
             --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \
             --authenticator jwt \
