@@ -52,7 +52,7 @@ jobs:
             --database "$SNOWFLAKE_DATABASE" \
             --schema "$SNOWFLAKE_SCHEMA" \
             --host "$SNOWFLAKE_HOST" \
-            --port "$SNOWFLAKE_PORT"
+            --port "$SNOWFLAKE_PORT" \
             --region "$SNOWFLAKE_REGION"
 
 
