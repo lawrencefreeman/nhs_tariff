@@ -51,22 +51,6 @@ jobs:
             --warehouse "$SNOWFLAKE_WAREHOUSE" \
             --database "$SNOWFLAKE_DATABASE"
 
-
-user = "DBT_SVC"
-password = "@ehgWhALkoP3k2kKF8Z*"
-host = "GHYUWTI-FO56503.snowflakecomputing.com"
-region = "eu-west-2"
-port = 443
-database = "NHS_TARIFF_DEV"
-schema = "BRONZE"
-warehouse = "COMPUTE_WH"
-role = "DEVELOPER"
-authenticator = "jwt"
-private_key_file = "/Users/loz/Projects/data_eng_projects/nhs_payment_scheme/schema_private/rsa_key.p8"
-          
-          echo "Testing connection..."
-          snow connection test default
-
       - name: Run Snowflake setup scripts
         env:
           AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
