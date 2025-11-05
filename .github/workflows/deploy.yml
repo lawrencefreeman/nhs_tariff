@@ -41,6 +41,8 @@ jobs:
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
           PRIVATE_KEY_PASSPHRASE: ${{ secrets.PRIVATE_KEY_PASSPHRASE }}
         run: |
+          echo "DEBUG: env variable check"
+          env | grep PRIVATE_KEY_PASSPHRASE || echo "not visible"
           echo "Creating Snowflake CLI connection..."
           snow connection add --connection-name default --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --authenticator SNOWFLAKE_JWT --private-key-file private_key.p8 --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "$SNOWFLAKE_DATABASE" --schema "$SNOWFLAKE_SCHEMA" --host "$SNOWFLAKE_HOST" --region "$SNOWFLAKE_REGION"
 
