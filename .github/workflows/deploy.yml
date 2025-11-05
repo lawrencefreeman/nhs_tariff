@@ -42,7 +42,7 @@ jobs:
           SNOWFLAKE_LOG_LEVEL: DEBUG
         run: |
           echo "Creating Snowflake CLI connection..."
-          snow --verbose connection add --connection-name default --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --authenticator SNOWFLAKE_JWT --private-key-file private_key.p8 --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "$SNOWFLAKE_DATABASE" --schema "$SNOWFLAKE_SCHEMA" --host "$SNOWFLAKE_HOST" --region "$SNOWFLAKE_REGION"
+          snow connection add --connection-name default --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --authenticator SNOWFLAKE_JWT --private-key-file private_key.p8 --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "$SNOWFLAKE_DATABASE" --schema "$SNOWFLAKE_SCHEMA" --host "$SNOWFLAKE_HOST" --region "$SNOWFLAKE_REGION"
 
       - name: Run Snowflake setup scripts
         env:
