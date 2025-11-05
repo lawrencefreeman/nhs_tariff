@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.egg-info/
+*.log
+
+# Environments
+.venv/
+env/
+venv/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local Working Files for Demo
+schema_private/
+
+# Data
+*.csv
+*.txt
+*.parquet
+*.xlsx
+
+# dbt
+target/
+dbt_packages/
+logs/
+
