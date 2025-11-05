@@ -1,4 +1,4 @@
-name: Deploy Snowflake Setup (Key-Pair Auth)
+name: Deploy Snowflake setup
 
 on:
   push:
@@ -6,34 +6,22 @@ on:
       - dev
       - test
       - main
-  workflow_dispatch:
-
-env:
-  ENVIRONMENT: ${{ github.ref_name }}   # e.g., dev / test / main
 
 jobs:
   deploy:
-    name: Deploy to Snowflake
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install Snowflake CLI
+      - name: Install SnowSQL CLI
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pip
           pip install snowflake-cli-labs
-          snow --version
-
-      - name: Configure private key for Snowflake auth
-        env:
-          SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
-        run: |
-          echo "$SNOWFLAKE_PRIVATE_KEY" > private_key.p8
-          chmod 600 private_key.p8
-
+          snow --version    
+      
       - name: Run Snowflake setup scripts
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
@@ -51,9 +39,8 @@ jobs:
             snow sql \
               --account "$SNOWFLAKE_ACCOUNT" \
               --user "$SNOWFLAKE_USER" \
-              --authenticator snowflake_jwt \
-              --private-key-path private_key.p8 \
-              --private-key-passphrase "$SNOWFLAKE_PRIVATE_KEY_PASSPHRASE" \
+              --authenticator jwt \
+              --private-key-file private_key.p8 \
               --role "$SNOWFLAKE_ROLE" \
               --warehouse "$SNOWFLAKE_WAREHOUSE" \
               --database "$SNOWFLAKE_DATABASE" \
