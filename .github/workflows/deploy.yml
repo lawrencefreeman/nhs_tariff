@@ -42,8 +42,8 @@ jobs:
         run: |
           echo "Creating Snowflake CLI connection..."
           snow connection add 
-            --connection-name default \ --good
-            --account "$SNOWFLAKE_ACCOUNT" \ --good
+            --connection-name default \
+            --account "$SNOWFLAKE_ACCOUNT" \
             --user "$SNOWFLAKE_USER" \ 
             --authenticator SNOWFLAKE_JWT \
             --private-key-file private_key.p8 \
