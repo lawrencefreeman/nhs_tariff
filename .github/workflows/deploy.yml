@@ -44,7 +44,7 @@ jobs:
           snow connection add 
             --connection-name default \
             --account "$SNOWFLAKE_ACCOUNT" \
-            --user "$SNOWFLAKE_USER" \ 
+            --user "$SNOWFLAKE_USER" \
             --authenticator SNOWFLAKE_JWT \
             --private-key-file private_key.p8 \
             --role "$SNOWFLAKE_ROLE" \
