@@ -49,7 +49,6 @@ jobs:
             --role "$SNOWFLAKE_ROLE" \
             --warehouse "$SNOWFLAKE_WAREHOUSE" \
             --database "$SNOWFLAKE_DATABASE" \
-            --output json \
             --overwrite
           
           echo "Testing connection..."
