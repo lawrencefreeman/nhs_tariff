@@ -62,8 +62,8 @@
             S3_ALLOWED_LOCATION: ${{ secrets.S3_ALLOWED_LOCATION }}
           run: |
             echo "Deploying Snowflake setup..."
+            snow connection set ci_conn
             for file in snowflake/setup/*.sql; do
               echo "Running $file ..."
-              envsubst < "$file" > tmp.sql
-              snow sql -c ci_conn -f tmp.sql
+              envsubst < "$file" | snow sql -c ci_conn
             done
