@@ -1,4 +1,4 @@
- integrations are account level not db/schema level
+// integrations are account level not db/schema level
 // Make all setup commands idempotent for pipeline
 
 CREATE STORAGE INTEGRATION IF NOT EXISTS s3_integration
