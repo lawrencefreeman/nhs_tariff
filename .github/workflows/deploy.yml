@@ -51,9 +51,17 @@ jobs:
         env:
           AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
           S3_ALLOWED_LOCATION: ${{ secrets.S3_ALLOWED_LOCATION }}
+        - name: Debug SQL files
+        run: |
+          for file in snowflake/setup/*.sql; do
+            echo "Processing $file ..."
+            envsubst < "$file" > tmp.sql
+            cat tmp.sql
+            snow sql --query "$(cat tmp.sql)" --debug
+          done
         run: |
           echo "Deploying Snowflake setup..."
           for file in snowflake/setup/*.sql; do
             echo "Running $file ..."
-            snow sql -f "$(envsubst < $file)"
+            snow sql -q "$(envsubst < $file)"
           done
