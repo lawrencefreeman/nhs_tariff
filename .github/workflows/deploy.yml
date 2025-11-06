@@ -55,7 +55,11 @@ jobs:
             cat tmp.sql
             snow sql -c ci_conn --query "$(cat tmp.sql)" --debug
           done
-      
+      - name: Debug Snowflake config
+        run: |
+          echo "Checking Snowflake CLI config..."
+          cat ~/.config/snowflake/config.toml || echo "No config.toml found"
+
       - name: Run Snowflake setup scripts
         env:
           AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
