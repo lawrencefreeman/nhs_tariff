@@ -39,6 +39,11 @@ jobs:
           SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+          SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+          SNOWFLAKE_HOST: ${{ secrets.SNOWFLAKE_HOST }}
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_REGION: ${{ secrets.SNOWFLAKE_REGION }}
+          
           SNOWFLAKE_LOG_LEVEL: DEBUG
         run: |
           echo "First few lines of private_key.p8:"
