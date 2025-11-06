@@ -8,9 +8,3 @@ CREATE STORAGE INTEGRATION IF NOT EXISTS s3_integration
   STORAGE_AWS_ROLE_ARN = '${AWS_ROLE_ARN}'
   STORAGE_ALLOWED_LOCATIONS = ('${S3_ALLOWED_LOCATION}')
   COMMENT = 'Snowflake access to raw data bucket';
-
-  
-// confirm the creation of the integration and extract AWS details to setup the IAM trust policy
-// The following myst be retrieved and embedded into AWS policy:
-// STORAGE_AWS_IAM_USER_ARN
-// STORAGE_AWS_EXTERNAL_ID
