@@ -1,77 +1,68 @@
-name: Deploy Snowflake setup (Key Pair Auth)
+  name: Deploy Snowflake setup (Key Pair Auth)
 
-on:
-  push:
-    branches:
-      - dev
-      - test
-      - main
-  workflow_dispatch:
+  on:
+    push:
+      branches:
+        - dev
+        - test
+        - main
+    workflow_dispatch:
 
-jobs:
-  deploy:
-    name: Deploy to Snowflake
-    runs-on: ubuntu-latest
+  jobs:
+    deploy:
+      name: Deploy to Snowflake
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
 
-      - name: Install Snowflake CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
-          pip install --upgrade pip
-          pip install snowflake-cli-labs
-          snow --version
+        - name: Install Snowflake CLI
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y python3-pip
+            pip install --upgrade pip
+            pip install snowflake-cli-labs
+            snow --version
 
-      - name: Decode and write private key
-        env:
-          SNOWFLAKE_PRIVATE_KEY_BASE64: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_BASE64 }}
-        run: |
-          echo "$SNOWFLAKE_PRIVATE_KEY_BASE64" | base64 --decode > private_key.p8
-          chmod 600 private_key.p8
+        - name: Decode and write private key
+          env:
+            SNOWFLAKE_PRIVATE_KEY_BASE64: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_BASE64 }}
+          run: |
+            echo "$SNOWFLAKE_PRIVATE_KEY_BASE64" | base64 --decode > private_key.p8
+            chmod 600 private_key.p8
 
-      - name: Configure Snowflake connection
-        env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-          SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
-          SNOWFLAKE_HOST: ${{ secrets.SNOWFLAKE_HOST }}
-          SNOWFLAKE_REGION: ${{ secrets.SNOWFLAKE_REGION }}
-          
-          SNOWFLAKE_LOG_LEVEL: DEBUG
-        run: |
-          echo "First few lines of private_key.p8:"
-          echo "Line count:"
-          wc -l private_key.p8
-          echo "Creating Snowflake CLI connection..."
-          snow connection add --connection-name ci_conn --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --authenticator "SNOWFLAKE_JWT" --private-key-file private_key.p8 --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "$SNOWFLAKE_DATABASE" --schema "$SNOWFLAKE_SCHEMA" --host "$SNOWFLAKE_HOST" --region "$SNOWFLAKE_REGION" --no-interactive
+        - name: Configure Snowflake connection
+          env:
+            SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+            SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+            SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+            SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+            SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+            SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA }}
+            SNOWFLAKE_HOST: ${{ secrets.SNOWFLAKE_HOST }}
+            SNOWFLAKE_REGION: ${{ secrets.SNOWFLAKE_REGION }}
+            
+            SNOWFLAKE_LOG_LEVEL: DEBUG
+          run: |
+            echo "First few lines of private_key.p8:"
+            echo "Line count:"
+            wc -l private_key.p8
+            echo "Creating Snowflake CLI connection..."
+            snow connection add --connection-name ci_conn --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --authenticator "SNOWFLAKE_JWT" --private-key-file private_key.p8 --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "$SNOWFLAKE_DATABASE" --schema "$SNOWFLAKE_SCHEMA" --host "$SNOWFLAKE_HOST" --region "$SNOWFLAKE_REGION" --no-interactive
 
-      - name: Debug Snowflake config
-        run: |
-          echo "Checking Snowflake CLI config..."
-          cat ~/.config/snowflake/config.toml || echo "No config.toml found"
-      
-      - name: Debug SQL files (optional)
-        run: |
-          for file in snowflake/setup/*.sql; do
-            echo "Processing $file ..."
-            envsubst < "$file" > tmp.sql
-            cat tmp.sql
-            snow sql -c ci_conn --query "$(cat tmp.sql)" --debug
-          done
+        - name: Debug Snowflake config
+          run: |
+            echo "Checking Snowflake CLI config..."
+            cat ~/.config/snowflake/config.toml || echo "No config.toml found"
 
-      - name: Run Snowflake setup scripts
-        env:
-          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
-          S3_ALLOWED_LOCATION: ${{ secrets.S3_ALLOWED_LOCATION }}
-        run: |
-          echo "Deploying Snowflake setup..."
-          for file in snowflake/setup/*.sql; do
-            echo "Running $file ..."
-            snow sql -c ci_conn -q "$(envsubst < $file)"
-          done
+        - name: Run Snowflake setup scripts
+          env:
+            AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+            S3_ALLOWED_LOCATION: ${{ secrets.S3_ALLOWED_LOCATION }}
+          run: |
+            echo "Deploying Snowflake setup..."
+            for file in snowflake/setup/*.sql; do
+              echo "Running $file ..."
+              snow sql -c ci_conn -q "$(envsubst < $file)"
+            done
