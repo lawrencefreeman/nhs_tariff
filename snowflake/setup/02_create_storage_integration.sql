@@ -14,5 +14,3 @@ CREATE STORAGE INTEGRATION IF NOT EXISTS s3_integration
 // The following myst be retrieved and embedded into AWS policy:
 // STORAGE_AWS_IAM_USER_ARN
 // STORAGE_AWS_EXTERNAL_ID
-
-//DESC INTEGRATION s3_integration;
