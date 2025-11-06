@@ -65,5 +65,5 @@
             for file in snowflake/setup/*.sql; do
               echo "Running $file ..."
               envsubst < "$file" > tmp.sql
-              snow sql -c ci_conn --file tmp.sql
+              snow sql -c ci_conn -f tmp.sql
             done
