@@ -59,7 +59,7 @@ jobs:
             cat tmp.sql
             snow sql --query "$(cat tmp.sql)" --debug
           done
-        run: |
+          
           echo "Deploying Snowflake setup..."
           for file in snowflake/setup/*.sql; do
             echo "Running $file ..."
