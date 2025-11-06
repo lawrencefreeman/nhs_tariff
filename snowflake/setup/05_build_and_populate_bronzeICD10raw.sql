@@ -23,5 +23,5 @@ COPY INTO BRONZE.ICD10_RAW
 FROM @bronze_raw_stage/ICD10/
 FILE_FORMAT = (FORMAT_NAME = TXT_ICD10_FORMAT ERROR_ON_COLUMN_COUNT_MISMATCH = FALSE)
 ON_ERROR = 'CONTINUE'
-PURGE = FALSE // do not clean out source files on success
-FORCE = FALSE; // do not force overwrite, enable idempotent as by detault
+PURGE = FALSE -- do not clean out source files on success
+FORCE = FALSE; -- do not force overwrite, enable idempotent as by detault
