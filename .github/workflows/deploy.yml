@@ -64,5 +64,5 @@
             echo "Deploying Snowflake setup..."
             for file in snowflake/setup/*.sql; do
               echo "Running $file ..."
-              envsubst < "$file" | snow sql -c ci_conn --no-repl
+              envsubst < "$file" | snow sql -c ci_conn --silent
             done
