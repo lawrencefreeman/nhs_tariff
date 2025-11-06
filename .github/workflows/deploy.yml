@@ -28,7 +28,8 @@ jobs:
       - name: Decode and write private key
         env:
           SNOWFLAKE_PRIVATE_KEY_BASE64: ${{ secrets.SNOWFLAKE_PRIVATE_KEY_BASE64 }}
-        run: echo "$SNOWFLAKE_PRIVATE_KEY_BASE64" | base64 --decode > private_key.p8
+        run: |
+          echo "$SNOWFLAKE_PRIVATE_KEY_BASE64" | base64 --decode > private_key.p8
           chmod 600 private_key.p8
 
       - name: Configure Snowflake connection
