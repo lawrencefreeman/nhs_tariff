@@ -45,7 +45,7 @@ jobs:
           echo "Line count:"
           wc -l private_key.p8
           echo "Creating Snowflake CLI connection..."
-          snow connection add --connection-name default --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --authenticator "SNOWFLAKE_JWT" --private-key-file private_key.p8 --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "$SNOWFLAKE_DATABASE" --schema "$SNOWFLAKE_SCHEMA" --host "$SNOWFLAKE_HOST" --region "$SNOWFLAKE_REGION" --no-interactive
+          snow connection add --connection-name ci_conn --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --authenticator "SNOWFLAKE_JWT" --private-key-file private_key.p8 --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "$SNOWFLAKE_DATABASE" --schema "$SNOWFLAKE_SCHEMA" --host "$SNOWFLAKE_HOST" --region "$SNOWFLAKE_REGION" --no-interactive
 
       - name: Debug SQL files (optional)
         run: |
@@ -53,7 +53,7 @@ jobs:
             echo "Processing $file ..."
             envsubst < "$file" > tmp.sql
             cat tmp.sql
-            snow sql --query "$(cat tmp.sql)" --debug
+            snow sql -c ci_conn --query "$(cat tmp.sql)" --debug
           done
       
       - name: Run Snowflake setup scripts
@@ -64,5 +64,5 @@ jobs:
           echo "Deploying Snowflake setup..."
           for file in snowflake/setup/*.sql; do
             echo "Running $file ..."
-            snow sql -q "$(envsubst < $file)"
+            snow sql -c ci_conn -q "$(envsubst < $file)"
           done
