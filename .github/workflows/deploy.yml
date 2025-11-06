@@ -47,11 +47,7 @@ jobs:
           echo "Creating Snowflake CLI connection..."
           snow connection add --connection-name default --account "$SNOWFLAKE_ACCOUNT" --user "$SNOWFLAKE_USER" --authenticator "SNOWFLAKE_JWT" --private-key-file private_key.p8 --role "$SNOWFLAKE_ROLE" --warehouse "$SNOWFLAKE_WAREHOUSE" --database "$SNOWFLAKE_DATABASE" --schema "$SNOWFLAKE_SCHEMA" --host "$SNOWFLAKE_HOST" --region "$SNOWFLAKE_REGION" --no-interactive
 
-      - name: Run Snowflake setup scripts
-        env:
-          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
-          S3_ALLOWED_LOCATION: ${{ secrets.S3_ALLOWED_LOCATION }}
-        - name: Debug SQL files
+      - name: Debug SQL files (optional)
         run: |
           for file in snowflake/setup/*.sql; do
             echo "Processing $file ..."
@@ -59,7 +55,12 @@ jobs:
             cat tmp.sql
             snow sql --query "$(cat tmp.sql)" --debug
           done
-          
+      
+      - name: Run Snowflake setup scripts
+        env:
+          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+          S3_ALLOWED_LOCATION: ${{ secrets.S3_ALLOWED_LOCATION }}
+        run: |
           echo "Deploying Snowflake setup..."
           for file in snowflake/setup/*.sql; do
             echo "Running $file ..."
