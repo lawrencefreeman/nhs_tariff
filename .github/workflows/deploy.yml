@@ -55,5 +55,5 @@ jobs:
           echo "Deploying Snowflake setup..."
           for file in snowflake/setup/*.sql; do
             echo "Running $file ..."
-            snow sql -q "$(envsubst < $file)"
+            snow sql -f "$(envsubst < $file)"
           done
